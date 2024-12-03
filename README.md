@@ -37,8 +37,8 @@
    cd project
    
    Запустите сервисы:
-  ```bash
-  docker-compose up --build
+     ```bash
+     docker-compose up --build
 
    Проверьте, что все сервисы работают:
   ```bash
