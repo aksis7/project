@@ -31,12 +31,12 @@
    - **Docker**: [Инструкция по установке](https://docs.docker.com/get-docker/).
    - **Docker Compose**: [Инструкция по установке](https://docs.docker.com/compose/install/).
 
-   Клонируйте репозиторий:
+2. Клонируйте репозиторий:
    ```bash
    git clone https://github.com/aksis7/project.git
    cd project
    
-   Запустите сервисы:
+3. Запустите сервисы:
      ```bash
      docker-compose up --build
 
