@@ -40,7 +40,7 @@
   ```bash
   docker-compose up --build
 
-Проверьте, что все сервисы работают:
+   Проверьте, что все сервисы работают:
   ```bash
   docker-compose ps
 
