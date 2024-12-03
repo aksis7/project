@@ -38,6 +38,7 @@
 3. Запустите сервисы:
   ```bash
   docker-compose up --build
+---
 4. Проверьте, что все сервисы работают:
   ```bash
   docker-compose ps
