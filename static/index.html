@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        .order-details {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        details {
+            margin: 10px 0;
+        }
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Order Details</h1>
+        <div class="form-group">
+            <label for="order-id">Enter Order ID:</label>
+            <input type="text" id="order-id" placeholder="e.g., 12345">
+        </div>
+        <button id="fetch-order">Fetch Order</button>
+        <div class="order-details" id="order-details" style="display: none;">
+            <h2>Order Information:</h2>
+            <table id="order-table"></table>
+        </div>
+        <div id="error-message" style="display: none;"></div>
+    </div>
+
+    <script>
+        function renderNestedObject(key, value) {
+            if (Array.isArray(value)) {
+                // If value is an array, render it as rows in a nested table
+                let arrayHtml = `<details><summary>${key}</summary><table>`;
+                value.forEach((item, index) => {
+                    for (const subKey in item) {
+                        arrayHtml += `
+                            <tr>
+                                <td>${key}[${index}].${subKey}</td>
+                                <td>${item[subKey]}</td>
+                            </tr>`;
+                    }
+                });
+                arrayHtml += `</table></details>`;
+                return arrayHtml;
+            } else if (typeof value === "object" && value !== null) {
+                // Render nested objects
+                let nestedHtml = `<details><summary>${key}</summary><table>`;
+                for (const subKey in value) {
+                    nestedHtml += `
+                        <tr>
+                            <td>${key}.${subKey}</td>
+                            <td>${renderNestedObject(subKey, value[subKey])}</td>
+                        </tr>`;
+                }
+                nestedHtml += `</table></details>`;
+                return nestedHtml;
+            } else {
+                // Render primitive values
+                return value;
+            }
+        }
+
+        document.getElementById('fetch-order').addEventListener('click', async () => {
+            const orderId = document.getElementById('order-id').value;
+            const orderDetailsDiv = document.getElementById('order-details');
+            const orderTable = document.getElementById('order-table');
+            const errorMessage = document.getElementById('error-message');
+            
+            orderDetailsDiv.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            if (!orderId) {
+                alert('Please enter an Order ID.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8082/orders/${orderId}`);
+                if (!response.ok) {
+                    throw new Error('Order not found');
+                }
+                const data = await response.json();
+
+                // Generate table rows
+                let tableHtml = `
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>`;
+                for (const key in data) {
+                    tableHtml += `
+                        <tr>
+                            <td>${key}</td>
+                            <td>${renderNestedObject(key, data[key])}</td>
+                        </tr>`;
+                }
+
+                orderTable.innerHTML = tableHtml;
+                orderDetailsDiv.style.display = 'block';
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

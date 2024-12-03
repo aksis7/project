@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Viewer</title>
+    <script>
+        async function fetchOrder() {
+            const orderId = document.getElementById('order-id').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = '';
+
+            if (!orderId) {
+                alert('Please enter an Order ID');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/orders/${orderId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    resultDiv.textContent = 'Order not found';
+                }
+            } catch (error) {
+                resultDiv.textContent = 'Error fetching order: ' + error;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Order Viewer</h1>
+    <label for="order-id">Order ID:</label>
+    <input type="text" id="order-id" />
+    <button onclick="fetchOrder()">Fetch Order</button>
+    <pre id="result" style="background: #f3f3f3; padding: 10px;"></pre>
+</body>
+</html>
