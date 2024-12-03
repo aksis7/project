@@ -45,10 +45,10 @@
      docker-compose ps
 
 5.  Тестирование веб-интерфейса
-    http://localhost:8082/health
-    Ответ:ок
+       http://localhost:8082/health
+       Ответ:ок
 6.  Откройте веб-интерфейс в браузере:
-     Перейдите по адресу: http://localhost:8082.
+      Перейдите по адресу: http://localhost:8082.
       Введите нужный uid,например:b563feb7b2b84b6test
 7.  Тестирование производительности
      Запустите test/vegeta-test.bat
